@@ -4,10 +4,7 @@
 #include <stdio.h>
 
 
-
-
-
-
+// Type changer
 float fixed_to_float(uint32_t fixed, int bits, int intbits) {
 	fixed = (fixed&((1<<bits)-1));
 	bool sign = (fixed>>(bits-1));
@@ -24,7 +21,6 @@ float fixed_to_float(uint32_t fixed, int bits, int intbits) {
 
 	return ret;
 }
-
 uint32_t float_to_fixed(float radian, int bits, int intbits) {
 	uint32_t integer_portion = (uint32_t)radian;
 	uint32_t frac_portion = (uint32_t)((radian - integer_portion) * (1<<(bits-intbits)));
@@ -34,6 +30,7 @@ uint32_t float_to_fixed(float radian, int bits, int intbits) {
 }
 
 
+// Sqrt
 extern "C" uint32_t bdpi_sqrt32(uint32_t data) {
 	float r = sqrt(*(float*)&data);
 	return *(uint32_t*)&r;
@@ -43,8 +40,45 @@ extern "C" uint64_t bdpi_sqrt64(uint64_t data) {
 	//printf( "sqrt bdpi called %lf\n", r );
 	return *(uint64_t*)&r;
 }
+extern "C" uint32_t bdpi_sqrt_cube32(uint32_t data) {
+	float r = powf(*((float*)&data), 3.0/2.0);
+	return *((uint32_t*)&r);
+}
 
 
+// Sin & Cos
+extern "C" uint32_t bdpi_sin32(uint32_t data) {
+	float fsin = sin(*(float*)&data);
+	return *(uint32_t*)&fsin;
+}
+extern "C" uint64_t bdpi_sin64(uint64_t data) {
+	double fsin = sin(*(double*)&data);
+	return *(uint64_t*)&fsin;
+}
+extern "C" uint32_t bdpi_cos32(uint32_t data) {
+	float fcos = cos(*(float*)&data);
+	return *(uint32_t*)&fcos;
+}
+extern "C" uint64_t bdpi_cos64(uint64_t data) {
+	double fcos = cos(*(double*)&data);
+	return *(uint64_t*)&fcos;
+}
+extern "C" uint32_t bdpi_asin32(uint32_t data) {
+	float fasin = asin(*(float*)&data);
+	return *(uint32_t*)&fasin;
+}
+extern "C" uint64_t bdpi_asin64(uint64_t data) {
+	double fasin = asin(*(double*)&data);
+	return *(uint64_t*)&fasin;
+}
+extern "C" uint32_t bdpi_acos32(uint32_t data) {
+	float facos = acos(*(float*)&data);
+	return *(uint32_t*)&facos;
+}
+extern "C" uint64_t bdpi_acos64(uint64_t data) {
+	double facos = acos(*(double*)&data);
+	return *(uint64_t*)&facos;
+}
 extern "C" uint32_t bdpi_sincos(uint32_t data) {
 	// input: phase in radians
 	// only lower 16 bits are valid
@@ -56,7 +90,6 @@ extern "C" uint32_t bdpi_sincos(uint32_t data) {
 	printf( "--- %f %f\n", fsin, fcos );
 	return (float_to_fixed(fsin, 16, 2)<<16) | float_to_fixed(fcos, 16, 2);
 }
-
 extern "C" uint32_t bdpi_atan(uint32_t x, uint32_t y) {
 	// input: cartesian, only 16 bits are valid for both x and y
 	// fixed point, 2 bit integer part
@@ -68,13 +101,14 @@ extern "C" uint32_t bdpi_atan(uint32_t x, uint32_t y) {
 	return float_to_fixed(fatan, 16, 3);
 }
 
+
+// Division
 extern "C" uint32_t bdpi_divisor(uint32_t a, uint32_t b) {
 	return a/b;
 }
 extern "C" uint32_t bdpi_divisor_remainder(uint32_t a, uint32_t b) {
 	return a%b;
 }
-
 extern "C" uint32_t bdpi_divisor_float(uint32_t a, uint32_t b) {
 	float ad = *((float*)&a);
 	float bd = *((float*)&b);
@@ -83,16 +117,6 @@ extern "C" uint32_t bdpi_divisor_float(uint32_t a, uint32_t b) {
 
 	return r;
 }
-
-extern "C" uint64_t bdpi_mult_double(uint64_t a, uint64_t b) {
-	double ad = *((double*)&a);
-	double bd = *((double*)&b);
-	double rd = ad*bd;
-	uint64_t r = *((uint64_t*)&rd);
-
-	return r;
-}
-
 extern "C" uint64_t bdpi_divisor_double(uint64_t a, uint64_t b) {
 	double ad = *((double*)&a);
 	double bd = *((double*)&b);
@@ -102,7 +126,13 @@ extern "C" uint64_t bdpi_divisor_double(uint64_t a, uint64_t b) {
 	return r;
 }
 
-extern "C" uint32_t bdpi_sqrt_cube32(uint32_t data) {
-	float r = powf(*((float*)&data), 3.0/2.0);
-	return *((uint32_t*)&r);
+
+// Multiplication
+extern "C" uint64_t bdpi_mult_double(uint64_t a, uint64_t b) {
+	double ad = *((double*)&a);
+	double bd = *((double*)&b);
+	double rd = ad*bd;
+	uint64_t r = *((uint64_t*)&rd);
+
+	return r;
 }
