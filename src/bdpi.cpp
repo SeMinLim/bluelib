@@ -46,39 +46,7 @@ extern "C" uint32_t bdpi_sqrt_cube32(uint32_t data) {
 }
 
 
-// Sin & Cos
-extern "C" uint32_t bdpi_sin32(uint32_t data) {
-	float fsin = sin(*(float*)&data);
-	return *(uint32_t*)&fsin;
-}
-extern "C" uint64_t bdpi_sin64(uint64_t data) {
-	double fsin = sin(*(double*)&data);
-	return *(uint64_t*)&fsin;
-}
-extern "C" uint32_t bdpi_cos32(uint32_t data) {
-	float fcos = cos(*(float*)&data);
-	return *(uint32_t*)&fcos;
-}
-extern "C" uint64_t bdpi_cos64(uint64_t data) {
-	double fcos = cos(*(double*)&data);
-	return *(uint64_t*)&fcos;
-}
-extern "C" uint32_t bdpi_asin32(uint32_t data) {
-	float fasin = asin(*(float*)&data);
-	return *(uint32_t*)&fasin;
-}
-extern "C" uint64_t bdpi_asin64(uint64_t data) {
-	double fasin = asin(*(double*)&data);
-	return *(uint64_t*)&fasin;
-}
-extern "C" uint32_t bdpi_acos32(uint32_t data) {
-	float facos = acos(*(float*)&data);
-	return *(uint32_t*)&facos;
-}
-extern "C" uint64_t bdpi_acos64(uint64_t data) {
-	double facos = acos(*(double*)&data);
-	return *(uint64_t*)&facos;
-}
+// Trigonometric
 extern "C" uint32_t bdpi_sincos(uint32_t data) {
 	// input: phase in radians
 	// only lower 16 bits are valid
